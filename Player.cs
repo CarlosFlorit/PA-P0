@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Variables
-    public float movementSpeed;
-    public GameObject camera;
+    // Variables  
+    public float movementSpeed; //establece la velocidad de movimiento del jugador
+    public GameObject camera; //asigna la c√°mara al jugador para que lo siga
 
     public GameObject playerObj;
 
@@ -18,14 +18,14 @@ public class Player : MonoBehaviour
 
     public float points;
 
-    //MÈtodos
+    //M√©todos
   
 
     // Update is called once per frame
     void Update()
     {
 
-        //El jugador mira hacia el puntero del ratÛn
+        //El jugador mira hacia el puntero del rat√≥n
         Plane playerPlane = new Plane(Vector3.up, transform.position);
         Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
         float hitDist = 0.0f;
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
 
         }
 
-        //Atr·s
+        //Atr√°s
         if (Input.GetKey(KeyCode.S))
         {
             transform.Translate(Vector3.back * movementSpeed * Time.deltaTime);
@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
         }
 
         //
-        //Disparo caÒonaco
+        //Disparo ca√±onaco
         //
 
         if (Input.GetMouseButtonDown(0))
@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Crea bala cuando se dispara
     void Disparo()
     {
         bulletSpawned = Instantiate(bala.transform, bulletSpawnPoint.transform.position, Quaternion.identity);
