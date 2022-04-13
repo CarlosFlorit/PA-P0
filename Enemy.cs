@@ -10,11 +10,12 @@ public class Enemy : MonoBehaviour
     public float pointsToGive;
 
 
-    //Methods
+    //Métodos
 
     // Update is called once per frame
     void Update()
     {
+        //mata enemigo si se queda sin puntos de vida
         if (vidaEnemigo <= 0)
         {
             EnemigoMuere();
@@ -23,7 +24,9 @@ public class Enemy : MonoBehaviour
 
     public void EnemigoMuere()
     {
+        //destruye enemigo
         Destroy(this.gameObject);
+        //da puntos al jugador
         player.GetComponent<Player>().points += pointsToGive;
     }
 
