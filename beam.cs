@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class beam : MonoBehaviour
 {
-    //Creamos line renderer para el puntero láser
     private LineRenderer beam1;
 
     private Camera cam;
@@ -14,15 +13,21 @@ public class beam : MonoBehaviour
     private Vector3 mousePos;
 
     public Light beamLight;
+    public Material beamMaterial;
 
     void Start()
     {
-        //Cogemos el láser del line renderer y le asignamos grosor (finito)
+        // Crea laser
+        
         beam1 = this.gameObject.AddComponent<LineRenderer>();
         beam1.startWidth = 0.1f;
         beam1.endWidth = 0.1f;
-
+        beam1.material = beamMaterial;
         
+
+        //beam1 = GetComponent<LineRenderer>();
+
+
 
         // Grab the main camera.
         cam = Camera.main;
@@ -31,10 +36,8 @@ public class beam : MonoBehaviour
 
     void Update()
     {
-        //Se apaga si no pulsamos el botón
         beamLight.enabled = false;
 
-        //Se enciende cuando apretamos el botón derecho del ratón
         if (Input.GetMouseButton(0))
         {
             checkLaser();
@@ -46,11 +49,11 @@ public class beam : MonoBehaviour
     void checkLaser()
     {
 
-        // Origen y final del láser
+        // Finding the origin and end point of laser.
         origin = this.transform.position + this.transform.forward * 0.5f * this.transform.lossyScale.z;
 
 
-        // Encuentra el puntero en el mundo 3D
+        // Finding mouse pos in 3D space.
         mousePos = Input.mousePosition;
         mousePos.z = 300f;
         //endPoint = cam.ScreenToWorldPoint(mousePos);
@@ -59,15 +62,15 @@ public class beam : MonoBehaviour
 
         
 
-        // Dirección del haz
+        // Find direction of beam.
         Vector3 dir = endPoint - origin;
         dir.Normalize();
 
-        // ¿Choca con un objeto?
+        // Are we hitting any colliders?
         RaycastHit hit;
         if (Physics.Raycast(origin, dir, out hit, 300f))
         {
-            // Si choca, determinamos el final sobre el objeto
+            // If yes, then set endpoint to hit-point.
             endPoint = hit.point;
             beamLight.transform.position = hit.point;
 
@@ -75,7 +78,7 @@ public class beam : MonoBehaviour
             beamLight.enabled = true;
 
             /*
-            // Aplica fuerza al objeto con rigid body (no lo voy a usar, sólo quiero usar el láser para facilitar el apuntado) 
+            // Has this hit object got a rigidbody? 
             if (hit.transform.GetComponent<Rigidbody>() != null)
             {
                 hit.transform.GetComponent<Rigidbody>().
@@ -84,10 +87,10 @@ public class beam : MonoBehaviour
             */
         }
 
-        // Final del láser
+        // Set end point of laser.
         beam1.SetPosition(0, origin);
         beam1.SetPosition(1, endPoint);
-        // Activamos el láser
+        // Draw the laser!
         beam1.enabled = true;
 
     }

@@ -9,26 +9,111 @@ public class Enemy : MonoBehaviour
     public GameObject player;
     public float pointsToGive;
 
+    public float waitTime;
+    public float currentTime;
+    private bool shot;
 
-    //Métodos
+    public GameObject bullet;
+    public GameObject enemyBulletSpawnPoint;
+    public Transform bulletSpawned;
+
+
+    public float stoppingDistance;
+    public float speed;
+
+    public bool esSuicida;
+
+
+
+
+    //Methods
+
+    public void Start()
+    {
+        //player = GameObject.FindWithTag("Player");
+        
+
+
+        //bulletSpawnPoint = GameObject.Find("Cannon_Holder/bullet_spawn_point");
+
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        //mata enemigo si se queda sin puntos de vida
         if (vidaEnemigo <= 0)
         {
             EnemigoMuere();
         }
-    }
 
-    public void EnemigoMuere()
+        //Enemigo se encara hacia el jugador
+        this.transform.LookAt(player.transform);
+
+
+        if (currentTime == 0 && esSuicida == false)
+        {
+            EnemigoDispara();
+        }
+
+        if (shot && currentTime < waitTime)
+        {
+            currentTime += 1 * Time.deltaTime;
+        }
+
+        if (currentTime >= waitTime)
+        {
+            currentTime = 0;
+        }
+
+
+        //enemigo se mueve hacia el jugador y se detiene a distancia
+        if (Vector3.Distance(transform.position, player.transform.position) > stoppingDistance && esSuicida == false)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        }
+
+
+
+
+
+        //si el enemigo es suicida se lanza contra el jugador
+        else if (esSuicida == true)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        }
+
+
+
+
+
+    }
+    //fin de Update
+
+        public void EnemigoMuere()
     {
-        //destruye enemigo
         Destroy(this.gameObject);
-        //da puntos al jugador
         player.GetComponent<Player>().points += pointsToGive;
     }
+
+    public void EnemigoDispara()
+    {
+        shot = true;
+        //print("disparando");
+
+        bulletSpawned = Instantiate(bullet.transform, enemyBulletSpawnPoint.transform.position, Quaternion.identity);
+        bulletSpawned.rotation = this.transform.rotation;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (esSuicida == true && other.tag == "Player")
+        {
+            player.GetComponent<Player>().health -= 20;
+            Destroy(this.gameObject);
+        }
+    }
+
 
 
 }
