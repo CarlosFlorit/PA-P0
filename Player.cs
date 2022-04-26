@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 
     private Transform bulletSpawned;
 
+    //puntos del jugador
     public float points;
 
     //vida jugador
@@ -33,7 +34,7 @@ public class Player : MonoBehaviour
 
 
 
-    //M�todos
+    //Métodos
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -47,7 +48,7 @@ public class Player : MonoBehaviour
 
 
 
-        //El jugador mira hacia el puntero del rat�n
+        //El jugador mira hacia el puntero del ratón
         Plane playerPlane = new Plane(Vector3.up, transform.position);
         Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
         float hitDist = 0.0f;
@@ -87,7 +88,7 @@ public class Player : MonoBehaviour
 
         }
 
-        //Atr�s
+        //Atrás
         if (Input.GetKey(KeyCode.S))
         {
             transform.Translate(Vector3.back * movementSpeed * Time.deltaTime);
@@ -101,6 +102,7 @@ public class Player : MonoBehaviour
         }
         */
 
+        //determina la cadencia de disparo
         if (currentTime < waitTime)
         {
             currentTime += 1 * Time.deltaTime;
@@ -114,7 +116,7 @@ public class Player : MonoBehaviour
 
 
         //
-        //Disparo ca�onaco
+        //Disparo cañonaco
         //
 
         //if (Input.GetMouseButtonDown(0))
@@ -133,7 +135,7 @@ public class Player : MonoBehaviour
 
         */
 
-        //salto
+        //salto (no pirula)
         if (isGrounded)
         {
             if (Input.GetKey(KeyCode.F))
@@ -155,13 +157,14 @@ public class Player : MonoBehaviour
        
     }
 
+    //destruye al jugador (de momento sólo para debug)
     void jugadorMuere()
     {
-        print("Est�s frito");
+        print("Estás frito");
     }
 
 
-    //colisi�n al saltar
+    //colisión al saltar
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "Ground")
