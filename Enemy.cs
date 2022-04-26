@@ -50,12 +50,13 @@ public class Enemy : MonoBehaviour
         //Enemigo se encara hacia el jugador
         this.transform.LookAt(player.transform);
 
-
+        //Enemigo dispara si es tipo torre o tanque móvil
         if (currentTime == 0 && esSuicida == false)
         {
             EnemigoDispara();
         }
 
+        //Cadencia de fuego (ROF) del enemigo
         if (shot && currentTime < waitTime)
         {
             currentTime += 1 * Time.deltaTime;
@@ -77,7 +78,7 @@ public class Enemy : MonoBehaviour
 
 
 
-        //si el enemigo es suicida se lanza contra el jugador
+        //si el enemigo es tipo kamikaze se lanza contra el jugador
         else if (esSuicida == true)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
@@ -93,7 +94,7 @@ public class Enemy : MonoBehaviour
         public void EnemigoMuere()
     {
         Destroy(this.gameObject);
-        player.GetComponent<Player>().points += pointsToGive;
+        player.GetComponent<Player>().points += pointsToGive; //da puntos al jugador cuando el enemigo es destruido
     }
 
     public void EnemigoDispara()
@@ -105,6 +106,7 @@ public class Enemy : MonoBehaviour
         bulletSpawned.rotation = this.transform.rotation;
     }
 
+    //Si el enemigo es kamikaze y choca con el jugador causa daño
     public void OnTriggerEnter(Collider other)
     {
         if (esSuicida == true && other.tag == "Player")
