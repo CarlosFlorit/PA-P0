@@ -29,15 +29,17 @@ public class beam : MonoBehaviour
 
 
 
-        // Grab the main camera.
+        // coge la cámara principal
         cam = Camera.main;
     }
 
 
     void Update()
     {
+        //el láser se apaga cuando no se pulsa el botón
         beamLight.enabled = false;
 
+        //se enciende cuando se pulsa el botón
         if (Input.GetMouseButton(0))
         {
             checkLaser();
@@ -49,11 +51,11 @@ public class beam : MonoBehaviour
     void checkLaser()
     {
 
-        // Finding the origin and end point of laser.
+        // Determina el origen del haz
         origin = this.transform.position + this.transform.forward * 0.5f * this.transform.lossyScale.z;
 
 
-        // Finding mouse pos in 3D space.
+        // Encuentra el puntero del ratón
         mousePos = Input.mousePosition;
         mousePos.z = 300f;
         //endPoint = cam.ScreenToWorldPoint(mousePos);
@@ -62,19 +64,19 @@ public class beam : MonoBehaviour
 
         
 
-        // Find direction of beam.
+        // dirección del láser
         Vector3 dir = endPoint - origin;
         dir.Normalize();
 
-        // Are we hitting any colliders?
+        // Choca con objeto
         RaycastHit hit;
         if (Physics.Raycast(origin, dir, out hit, 300f))
         {
-            // If yes, then set endpoint to hit-point.
+            //final del láser en el objeto (para que no lo atraviese)
             endPoint = hit.point;
             beamLight.transform.position = hit.point;
 
-            //beamLight.enabled = !beamLight.enabled;
+            //Ilumina el objeto
             beamLight.enabled = true;
 
             /*
@@ -87,10 +89,9 @@ public class beam : MonoBehaviour
             */
         }
 
-        // Set end point of laser.
-        beam1.SetPosition(0, origin);
-        beam1.SetPosition(1, endPoint);
-        // Draw the laser!
+        beam1.SetPosition(0, origin); //origen del láser
+        beam1.SetPosition(1, endPoint); //final del láser
+        // Enciende el láser
         beam1.enabled = true;
 
     }
