@@ -37,7 +37,8 @@ public class Proyectil : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         //player = GameObject.FindWithTag("Player");
 
-        //used to create a radius for the accuracy and have a very unique randomness
+        
+        //Radio de precisión: cuando no es 100 las balas se dispersan. A veces no queda bien porque chocan contra el suelo
         if (accuracy != 100)
         {
             accuracy = 1 - (accuracy / 100);
@@ -63,6 +64,7 @@ public class Proyectil : MonoBehaviour
             }
         }
 
+        //Crea el fogonazo si se ha añadido a la variable
         if (muzzlePrefab != null)
         {
             var muzzleVFX = Instantiate(muzzlePrefab, transform.position, Quaternion.identity);
@@ -77,7 +79,8 @@ public class Proyectil : MonoBehaviour
             }
         }
     }
-
+    
+    //He usado FixedUpdate en lugar de update
     void Update()
     {
         //transform.Translate(Vector3.forward * Time.deltaTime * speed);
@@ -94,9 +97,11 @@ public class Proyectil : MonoBehaviour
 
     void FixedUpdate()
     {
+        //"lanza" el proyectil hacia adelante
         rb.position += (transform.forward + offset) * (speed * Time.deltaTime);
         maxDistancia += 1 * Time.deltaTime;
 
+        //Destruye el objeto para que no ralentice el juego cuando se crean muchos proyectiles
         if (maxDistancia >= 5)
         {
             Destroy(this.gameObject);
@@ -137,25 +142,31 @@ public class Proyectil : MonoBehaviour
         Destroy(gameObject);
     }
 
+    //Colisión del proyectil
     public void OnTriggerEnter(Collider other)
     {
+        //Si choca contra un enemigo
         if (other.tag == "Enemigo")
         {
             triggeringEnemy = other.gameObject;
-            triggeringEnemy.GetComponent<Enemy>().vidaEnemigo -= damage;
+            triggeringEnemy.GetComponent<Enemy>().vidaEnemigo -= damage; //quita vida al enemigo
+            
+            //instancia el efecto de impacto
             hitPrefab = Instantiate(hitPrefab, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
-            Destroy(this.gameObject);
+            Destroy(this.gameObject); //elimina el proyectil
 
         }
-
+        
+        //si choca contra el jugador
         if (other.tag == "Player")
         {
-            player.GetComponent<Player>().health -= 20;
-            Destroy(this.gameObject);
+            player.GetComponent<Player>().health -= 20; //reduce vida
+            Destroy(this.gameObject); //elimina el proyectil
         }
 
         else
         {
+            //si choca contra otra cosa (muro, suelo...) instancia el efecto de impacto y elimina el proyectil
             hitPrefab = Instantiate(hitPrefab, transform.position, Quaternion.FromToRotation(Vector3.up, impactNormal)) as GameObject;
             Destroy(this.gameObject);
         }
