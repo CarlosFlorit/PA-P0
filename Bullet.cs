@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    //Variable
     public float bulletSpeed;
     public float maxDistancia;
 
@@ -53,3 +54,4 @@ public class Bullet : MonoBehaviour
 
 
 }
+
